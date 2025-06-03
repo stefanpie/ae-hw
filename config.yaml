@@ -1,0 +1,54 @@
+max_iterations: 100  # Increased iterations
+checkpoint_interval: 1
+log_level: "INFO"
+log_dir: "./logs"
+random_seed: 7
+
+
+# LLM configuration
+llm:
+  primary_model: "google/gemini-2.0-flash-lite-001"
+  primary_model_weight: 1.0
+  secondary_model: "google/gemini-2.0-flash-lite-001"
+  secondary_model_weight: 0.0
+  api_base: "https://openrouter.ai/api/v1"
+  temperature: 0.7
+  top_p: 0.95
+  max_tokens: 8192
+  timeout: 600 
+
+
+prompt:
+  system_message: |
+    You are an expert digital hardware designer specializing in optimized arithmetic circuits. Your task is to optimize a simple 64 bit adder to minimize the total LUTs used by the adder on a 7 series Xilinx FPGA.
+
+    Key geometric insights:
+    - The adder is designed using verilog.
+    - You can use any common behavioral verilog as well as hierarchically restructure your design as long as it is functionally correct.
+    - There should always be a top module named `adder_64` that contains the main logic of the adder.
+      - It has a 64 bit input A and a 64 bit input B, and a 65 bit output SUM.
+    - Synthesis will not use DSPs for this design, we want the design with be synthesized to only LUTS and muxes.
+    - The adder should be designed to minimize the number of LUTs used, while still being functionally correct.
+    - There is also a testbench that will test the adder for functional correctness.
+
+  num_top_programs: 2
+  use_template_stochasticity: true
+
+# Database configuration
+database:
+  population_size: 60  # Increased population for more diversity
+  archive_size: 25
+  num_islands: 4
+  elite_selection_ratio: 0.3
+  exploitation_ratio: 0.7
+
+# Evaluator configuration
+evaluator:
+  timeout: 60
+  cascade_evaluation: false
+  use_llm_feedback: false
+  parallel_evaluations: 32
+
+# Evolution settings
+diff_based_evolution: false  # Use full rewrites instead of diffs
+allow_full_rewrites: true    # Allow full rewrites for constructor functions
