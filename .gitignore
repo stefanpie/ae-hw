@@ -10,7 +10,7 @@ wheels/
 .venv
 
 .env
-run_output/
-logs/
+run_output*/
+run_logs/
 
 .vscode/
